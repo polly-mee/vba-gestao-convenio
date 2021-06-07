@@ -6,7 +6,7 @@
 
 ##### Template básico e automatizado para a proposta, minimizando o tempo gasto com o controle orçamentário e de contratações e permitindo a visualização do Plano de Trabalho do convênio. 
 
-##### _Template criado em formato Excel e com base na linguagem do MS Office, o Visual Basic._
+##### _Template criado em formato Excel e com base na linguagem do MS Office, o Visual Basic for Applications._
 
 
 
