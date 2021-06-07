@@ -5,7 +5,7 @@ Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} frmCadastro
    ClientLeft      =   120
    ClientTop       =   465
    ClientWidth     =   7545
-   OleObjectBlob   =   "frmCadastro2.1.frx":0000
+   OleObjectBlob   =   "frmCadastro.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
 Attribute VB_Name = "frmCadastro"
@@ -13,10 +13,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-
 Option Explicit
-
-
 
 Private Sub UserForm_Initialize()
 
@@ -83,6 +80,7 @@ End Sub
 
 Private Sub spbExecContr_Change()
     ''Spinbutton do cadastro de CONTRATO
+    Application.ScreenUpdating = False
     
     'Definindo mínimo e máximo
     Me.spbExecContr.Min = 1
@@ -94,10 +92,12 @@ Private Sub spbExecContr_Change()
     'Atribuindo à textbox
     Me.txtExecContr.Value = Me.spbExecContr.Value
     
+    Application.ScreenUpdating = True
+    
 End Sub
 
 Private Sub lblCadastrarContr_Click()
-' Insere as informações do contrato na aba Contratos
+' Insere as informações do processo na aba Contratos
 '
     Dim Descricao As String
     Dim lin As Integer
@@ -116,26 +116,11 @@ Private Sub lblCadastrarContr_Click()
         ElseIf Me.txtCNPJContr.Value = "" Then
             MsgBox ("Preencha o campo de CNPJ")
 
-        ElseIf Me.txtDtContr.Value = "" Then
-            MsgBox ("Preencha o campo de Data do contrato")
-
-        ElseIf Me.txtNumContr.Value = "" Then
-            MsgBox ("Preencha o campo de Nº do contrato")
-
         ElseIf Me.txtVlrContr.Value = "" Then
             MsgBox ("Preencha o campo de Valor contratado")
 
-        ElseIf Me.txtVigenciaContr.Value = "" Then
-            MsgBox ("Preencha o campo de Vigência")
-
         ElseIf Me.cboRubricaContr.Value = "" Then
             MsgBox ("Preencha o campo de Rubrica")
-
-        ElseIf Me.txtObjContr.Value = "" Then
-            MsgBox ("Preencha o campo de Objeto de contratação")
-
-        ElseIf Me.txtExecContr.Value = "" Then
-            MsgBox ("Preencha o campo de Execução física")
 
         Else
         
@@ -157,11 +142,26 @@ Private Sub lblCadastrarContr_Click()
                 ActiveCell.Offset(0, 10).Value = Me.txtObsContr.Text
                 ActiveCell.Offset(0, 11).Value = Me.cboRubricaContr.Text
                 ActiveCell.Offset(0, 12).Value = Me.txtObjContr.Text
+                ActiveCell.Offset(0, 13).Value = Me.txtExecContr.Value
         
             'Mensagem de confirmação
             
             MsgBox "Contrato cadastrado com sucesso", vbOKOnly, "Concluído"
     End If
+
+    'Limpar caixas de texto para nova inserção sem fechar a caixa de formulário
+    
+    Me.txtProcessoContr = Empty
+    Me.txtForneContr = Empty
+    Me.txtCNPJContr = Empty
+    Me.txtDtContr = Empty
+    Me.txtNumContr = Empty
+    Me.txtVlrContr = Empty
+    Me.txtVigenciaContr = Empty
+    Me.txtObsContr = Empty
+    Me.cboRubricaContr = Empty
+    Me.txtObjContr = Empty
+    Me.txtExecContr = Empty
 
     Application.ScreenUpdating = True
             
@@ -243,6 +243,7 @@ Private Sub lblCadastrarValidacao_Click()
                 ActiveCell.Offset(0, 8).Value = Me.txtNumDocValid.Text
                 ActiveCell.Offset(0, 9).Value = Me.txtDtemissaoValid.Text
                 ActiveCell.Offset(0, 10).Value = Me.txtVlrValid.Text
+                ActiveCell.Offset(0, 14).Value = Me.txtVlrValid.Text
                 ActiveCell.Offset(0, 17).Value = Me.txtProdutoValid.Text
             
             'Mensagem de confirmação
@@ -250,6 +251,21 @@ Private Sub lblCadastrarValidacao_Click()
 
     End If
     
+    'Limpar caixas de texto para nova inserção sem fechar a caixa de formulário
+    
+    Me.txtForneValid = Empty
+    Me.txtCNPJValid = Empty
+    Me.txtAnoValid = Empty
+    Me.txtProcessoValid = Empty
+    Me.cboMetaValid = Empty
+    Me.cboEtapaValid = Empty
+    Me.cboRubricaValid = Empty
+    Me.txtNumDocValid = Empty
+    Me.txtDtemissaoValid = Empty
+    Me.txtVlrValid = Empty
+    Me.txtProdutoValid = Empty
+    Me.txtContrValid = Empty
+            
     Application.ScreenUpdating = True
 
 End Sub
@@ -265,14 +281,14 @@ Private Sub lblProcurar_Click()
     'Contador para referência de linha
     linpr = 4
     'Zera a busca da NF
-    Me.cboNF.Clear
+    Me.cboNFComp.Clear
     
     With Sheets("Despesas")
     'Faz a busca pelas nfs do processo
     Do Until .Range("E" & linpr).Value = ""
         
-        If .Range("E" & linpr).Value = Me.txtProcesso.Text Then
-            Me.cboNF.AddItem .Range("J" & linpr).Value
+        If .Range("E" & linpr).Value = Me.txtProcessoComp.Text Then
+            Me.cboNFComp.AddItem .Range("J" & linpr).Value
         End If
         
         linpr = linpr + 1
@@ -301,11 +317,11 @@ Private Sub lblGravarpag_Click()
     'Início do registro das informações na aba
     
     Do While wdesp.Range("E" & Lingr).Value <> ""
-        If wdesp.Range("E" & Lingr).Text = Me.txtProcesso.Text Then
-            If wdesp.Range("J" & Lingr).Text = Me.cboNF.Text Then
-                wdesp.Range("N" & Lingr).Value = Me.txtComprovante.Value
-                wdesp.Range("O" & Lingr).Value = Me.txtDtpag.Value
-                wdesp.Range("P" & Lingr).Value = Me.txtValorliq.Value
+        If wdesp.Range("E" & Lingr).Text = Me.txtProcessoComp.Text Then
+            If wdesp.Range("J" & Lingr).Text = Me.cboNFComp.Text Then
+                wdesp.Range("N" & Lingr).Value = Me.txtComprovanteComp.Value
+                wdesp.Range("O" & Lingr).Value = Me.txtDtpagComp.Value
+                wdesp.Range("P" & Lingr).Value = Me.txtValorliqComp.Value
             End If
         
         End If
@@ -313,6 +329,12 @@ Private Sub lblGravarpag_Click()
         Lingr = Lingr + 1
                 
     Loop
+    
+    Me.txtProcesso = Empty
+    Me.cboNFComp = Empty
+    Me.txtDtpagComp = Empty
+    Me.txtValorliqComp = Empty
+    Me.txtComprovanteComp = Empty
     
     Application.ScreenUpdating = True
     
@@ -335,7 +357,7 @@ Dim planilha As Worksheet
     'Bloqueio de cada aba da planilha
     
     For Each planilha In Sheets
-        planilha.Protect Password:=senha
+        planilha.Protect Password:=senha, AllowFiltering:=True
     Next
     
     Application.ScreenUpdating = True
